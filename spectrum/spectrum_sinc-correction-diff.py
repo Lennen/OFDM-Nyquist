@@ -47,6 +47,19 @@ f_tones = freqs_dac[active_mask]
 amp_raw = spec_dac_raw[active_mask]
 amp_comp = spec_dac_comp[active_mask]
 
+# Динамический расчёт ключевых метрик для заголовков
+k_edge = int(np.max(np.abs(subcarrier_freqs)))
+max_gain = 1.0 / np.sinc(k_edge / fs_mhz)
+max_gain_db = 20.0 * np.log10(max_gain)
+
+idx_5mhz = np.argmin(np.abs(f_tones - 5.0))
+peak_5_raw = amp_raw[idx_5mhz]
+peak_5_comp = amp_comp[idx_5mhz]
+
+f_lo_mhz = int(round(f_lo / 1e6))
+rf_low_edge = f_lo_mhz - 5
+rf_high_edge = f_lo_mhz + 5
+
 # 4. Построение графиков
 plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10})
 fig, axes = plt.subplots(3, 1, figsize=(12, 11.8), constrained_layout=True)
@@ -102,7 +115,7 @@ ax.axvline(-4.5, color="k", ls=":", lw=1.4, label="Границы Найквис
 ax.axvline(4.5, color="k", ls=":", lw=1.4)
 ax.set_xticks(range(-5, 6))
 ax.set_title(
-    "1. До IQ-ЦАП (fs = 9 МГц): предкоррекция поднимает края k=±4 в 1.44 раза (+3.2 дБ)"
+    f"1. До IQ-ЦАП (fs = {fs_mhz:g} МГц): предкоррекция поднимает края k=±{k_edge} в {max_gain:.2f} раза (+{max_gain_db:.1f} дБ)"
 )
 ax.set_xlabel("Частота в базовой полосе, МГц")
 ax.set_ylabel("Цифровая амплитуда |X[k]|")
@@ -187,7 +200,7 @@ for freq_val, r_val, c_val in zip(ft, ar, ac):
 
 ax.set_xticks(range(-14, 15, 2))
 ax.set_title(
-    "2. Выход IQ-ЦАП: коррекция меняет форму ВСЕХ зон (во 2-й зоне пик на +5 МГц вырос с 0.55 до 0.80)"
+    f"2. Выход IQ-ЦАП: коррекция меняет форму ВСЕХ зон (во 2-й зоне пик на +5 МГц вырос с {peak_5_raw:.2f} до {peak_5_comp:.2f})"
 )
 ax.set_xlabel("Частота в базовой полосе после ЦАП, МГц")
 ax.set_ylabel("Амплитуда")
@@ -249,7 +262,7 @@ for freq_val, r_val, c_val in zip(ft, ar, ac):
 
 ax.set_xticks(range(4986, 5015, 2))
 ax.set_title(
-    "3. В эфире (5 ГГц): основной канал выровнен, но внеполосные пики на 4995 и 5005 МГц выросли до 0.80"
+    f"3. В эфире ({f_lo / 1e9:g} ГГц): основной канал выровнен, но внеполосные пики на {rf_low_edge} и {rf_high_edge} МГц выросли до {peak_5_comp:.2f}"
 )
 ax.set_xlabel("Частота в радиоэфире, МГц")
 ax.set_ylabel("Амплитуда")
