@@ -1,0 +1,80 @@
+Протокол проверки ПСИР
+======================================================================
+K=64, QPSK, P_tx=1, SPLIT=1.000000
+L - число ветвей (инвариант). d - локальный наклон. SE=1/bw (цена).
+Робастность: ПСИР и ПСИР+неидеальности на общих случайных числах (CRN).
+
+Идентификация L по форме кривой:
+  OFDM базовый               L=1 Lhat=1 RMS=0.00734 (L-1:nan,L+1:1.959) ok
+  OFDM + TI-усреднение       L=1 Lhat=1 RMS=0.00780 (L-1:nan,L+1:2.201) ok
+  ПСИР                       L=2 Lhat=2 RMS=0.02404 (L-1:1.398,L+1:1.352) ok
+  ПСИР + неидеальности       L=2 Lhat=2 RMS=0.02384 (L-1:1.397,L+1:1.352) ok
+  Классич. ЧР, 2 АЦП         L=2 Lhat=2 RMS=0.01562 (L-1:1.498,L+1:1.459) ok
+  Классич. ЧР, 4 АЦП         L=2 Lhat=2 RMS=0.01259 (L-1:1.508,L+1:1.463) ok
+  ПСИР, идеальное CSI        L=2 Lhat=2 RMS=0.01406 (L-1:1.638,L+1:1.593) ok
+  ПСИР + SIMO 1x2            L=4 Lhat=4 RMS=0.01306 (L-1:0.702,L+1:0.694) ok
+  Alamouti 2x2 без ПСИР      L=4 Lhat=4 RMS=0.01107 (L-1:0.708,L+1:0.696) ok
+  Alamouti 2x2 + ПСИР        L=8 Lhat=8 RMS=0.00715 (L-1:0.339,L+1:0.333) ok
+
+Наклоны (low/high/asym):
+  OFDM базовый               L=1 low=(14, 24) d_low=0.968 high=(24, 34) d_high=0.976[изм] d_asym=1.000
+  OFDM + TI-усреднение       L=1 low=(14, 24) d_low=0.982 high=(24, 34) d_high=0.994[изм] d_asym=1.000
+  ПСИР                       L=2 low=(14, 24) d_low=1.872 high=(22, 30) d_high=2.102[изм] d_asym=2.000
+  ПСИР + неидеальности       L=2 low=(14, 24) d_low=1.871 high=(22, 30) d_high=2.100[изм] d_asym=2.000
+  Классич. ЧР, 2 АЦП         L=2 low=(14, 24) d_low=1.847 high=(22, 30) d_high=1.984[изм] d_asym=2.000
+  Классич. ЧР, 4 АЦП         L=2 low=(14, 24) d_low=1.916 high=(22, 30) d_high=2.027[изм] d_asym=2.000
+  ПСИР, идеальное CSI        L=2 low=(14, 24) d_low=1.924 high=(22, 30) d_high=2.014[изм] d_asym=2.000
+  ПСИР + SIMO 1x2            L=4 low=(6, 14) d_low=3.011 high=(14, 22) d_high=3.825[изм] d_asym=4.000
+  Alamouti 2x2 без ПСИР      L=4 low=(2, 12) d_low=2.430 high=(12, 20) d_high=3.594[изм] d_asym=4.000
+  Alamouti 2x2 + ПСИР        L=8 low=(2, 12) d_low=3.477 high=(16, 24) d_high=7.423[теор] d_asym=8.000
+
+Мультипликативность (равные tx/rx, равные АЦП):
+  proposed vs control_hw: d 0.98->1.87 ratio=1.91 dSNR@1e-4=14.67 dADC=0 SEr=0.50
+  alamouti_psir vs alamouti_ref: d 3.86->7.42 ratio=1.92 dSNR@1e-4=2.45 dADC=0 SEr=0.50
+
+Свип корреляции реплик (порядок падает при rho_f->1):
+  rho_f=0.00 d_eff=7.22
+  rho_f=0.50 d_eff=7.31
+  rho_f=0.90 d_eff=5.26
+  rho_f=0.99 d_eff=3.94
+
+Робастность (CRN), delta BER относительно идеала:
+  SNR=   0: BER_id=2.299e-01 BER_im=2.299e-01 delta=+0.00% ±0.36%
+  SNR=   2: BER_id=1.670e-01 BER_im=1.671e-01 delta=+0.01% ±0.47%
+  SNR=   4: BER_id=1.108e-01 BER_im=1.108e-01 delta=+0.02% ±0.63%
+  SNR=   6: BER_id=6.641e-02 BER_im=6.642e-02 delta=+0.02% ±0.86%
+  SNR=   8: BER_id=3.627e-02 BER_im=3.628e-02 delta=+0.03% ±1.20%
+  SNR=  10: BER_id=1.828e-02 BER_im=1.828e-02 delta=+0.05% ±1.70%
+  SNR=  12: BER_id=8.653e-03 BER_im=8.655e-03 delta=+0.03% ±2.46%
+  SNR=  14: BER_id=3.811e-03 BER_im=3.812e-03 delta=+0.03% ±3.71%
+  SNR=  16: BER_id=1.614e-03 BER_im=1.612e-03 delta=-0.08% ±5.62%
+  SNR=  18: BER_id=6.820e-04 BER_im=6.826e-04 delta=+0.08% ±8.55%
+  SNR=  20: BER_id=2.837e-04 BER_im=2.839e-04 delta=+0.07% ±9.28%
+  SNR=  22: BER_id=1.170e-04 BER_im=1.170e-04 delta=+0.01% ±11.76%
+  SNR=  24: BER_id=5.258e-05 BER_im=5.258e-05 delta=+0.00% ±10.95%
+  SNR=  26: BER_id=1.948e-05 BER_im=1.950e-05 delta=+0.11% ±12.31%
+  SNR=  28: BER_id=7.099e-06 BER_im=7.108e-06 delta=+0.13% ±14.88%
+  SNR=  30: BER_id=2.520e-06 BER_im=2.526e-06 delta=+0.25% ±18.09%
+
+Выигрыши:
+  ПСИР vs контроль           BER=1e-02: meas=5.239, LS=5.260, genie=5.384 dB
+  ПСИР vs контроль           BER=1e-03: meas=9.895, LS=9.823, genie=9.862 dB
+  ПСИР vs контроль           BER=1e-04: meas=14.561, LS=14.675, genie=14.687 dB
+  ПСИР vs контроль           BER=1e-06: meas=--, LS=24.611, genie=24.612 dB
+  ПСИР vs базовый            BER=1e-02: meas=8.247, LS=8.270, genie=8.395 dB
+  ПСИР vs базовый            BER=1e-03: meas=12.840, LS=12.833, genie=12.873 dB
+  ПСИР vs базовый            BER=1e-04: meas=--, LS=17.685, genie=17.697 dB
+  ПСИР vs базовый            BER=1e-06: meas=--, LS=27.621, genie=27.623 dB
+  ПСИР vs ЧР4                BER=1e-02: meas=-0.048, LS=0.000, genie=0.000 dB
+  ПСИР vs ЧР4                BER=1e-03: meas=0.024, LS=0.000, genie=0.000 dB
+  ПСИР vs ЧР4                BER=1e-04: meas=-0.073, LS=0.000, genie=0.000 dB
+  ПСИР vs ЧР4                BER=1e-06: meas=--, LS=0.000, genie=0.000 dB
+  Alam+ПСИР vs Alam          BER=1e-02: meas=0.699, LS=0.692, genie=0.993 dB
+  Alam+ПСИР vs Alam          BER=1e-03: meas=1.627, LS=1.549, genie=1.734 dB
+  Alam+ПСИР vs Alam          BER=1e-04: meas=2.430, LS=2.446, genie=2.572 dB
+  Alam+ПСИР vs Alam          BER=1e-06: meas=--, LS=4.411, genie=4.477 dB
+  Alam+ПСИР vs ПСИР          BER=1e-02: meas=5.875, LS=5.847, genie=6.240 dB
+  Alam+ПСИР vs ПСИР          BER=1e-03: meas=8.532, LS=8.545, genie=8.793 dB
+  Alam+ПСИР vs ПСИР          BER=1e-04: meas=11.641, LS=11.538, genie=11.703 dB
+  Alam+ПСИР vs ПСИР          BER=1e-06: meas=--, LS=18.122, genie=18.202 dB
+
